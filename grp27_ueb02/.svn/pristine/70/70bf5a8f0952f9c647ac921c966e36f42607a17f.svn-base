@@ -1,0 +1,56 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb02;
+
+import java.util.Arrays;
+
+/**
+ *
+ * @author Robin Böckmann
+ */
+public class Grp27_ueb02 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+
+        String location;
+
+        if (MeasuredValues.isInTown() == true) {
+            location = "innerorts";
+        } else {
+            location = "außerorts";
+        }
+
+        System.out.printf("Messung \t \t: %s %n", location);
+        System.out.printf("erlaubte Geschwindigkeit: %d    km/h %n", MeasuredValues.getAllowedSpeed());
+        System.out.printf("mittlere Geschwindigkeit: %.2f km/h %n", MeasuredValues.getAverage());
+        System.out.printf("Media Geschwindigkeit\t: %.2f km/h %n %n", MeasuredValues.getMedian());
+
+        Fines.createDataArray();
+
+        printValuesOfOffenders(1);
+
+    }
+
+    public static void printValuesOfOffenders(int strafindex) {
+
+        System.out.printf("%d Überschreitung(en) [ %d ..%d km/h] mit %d € Strafe: ", Fines.getData(strafindex).length
+        ,Fines.getMinSpeedForFine(strafindex),Fines.getMaxSpeedForFine(strafindex), Fines.getFineForIndex(strafindex));
+        
+        for (int i = 0; i < Fines.getData(strafindex).length; i++) {
+         System.out.printf("%d", Fines.getData(strafindex)[i]);
+         if( i +1 < Fines.getData(strafindex).length){
+         System.out.printf(", ");    
+         } else {
+          System.out.printf("%n");   
+         }
+             
+        }
+        
+    }
+}
