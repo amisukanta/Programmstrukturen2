@@ -1,0 +1,120 @@
+package grp27_ueb03;
+
+/**
+ *
+ * @author Robin
+ */
+public class Element {
+
+    /**
+     * The value of the element
+     */
+    private int value;
+
+    /**
+     * The next element of the element
+     */
+    private Element next;
+
+    /**
+     * Appends a new element at the end of the list of elements of the calling
+     * instance
+     *
+     * @param value the value of the new element that should be appended
+     * @return the previous element of new appended element
+     */
+    public Element appendElement(int value) {
+        if (this.next == null) {
+            Element newElement = new Element();
+            newElement.setValue(value);
+            this.setNext(newElement);
+        } else {
+            this.setNext(this.next.appendElement(value));
+        }
+        return this;
+    }
+
+    /**
+     * Inserts an new element with the committed value at the position so that
+     * the values of all connected element are in ascending order.
+     *
+     * @param value the value of the new element
+     * @return the new Element or the calling instance
+     */
+    public Element insertElement(int value) {
+        if (this.getValue() > value) {
+            Element newElement = new Element();
+            newElement.setValue(value);
+            newElement.setNext(this);
+            return newElement;
+        } else if (this.next == null) {
+            Element newElement = new Element();
+            newElement.setValue(value);
+            this.setNext(newElement);
+            return this;
+        } else {
+            this.setNext(this.next.insertElement(value));
+            return this;
+        }
+    }
+
+    /**
+     * Deletes the first element with the committed value. Starting from the
+     * instance that calls this method, the method interates recursivly through
+     * all appended elements until an element with the committed value is found.
+     * If there is no element with the committed value, the method returns the
+     * starting instance.
+     *
+     * @param value the value of the element that should be deleted
+     * @return the next Element of the deleted Element or, if no element was
+     * found with the committed value, the element itself
+     */
+    public Element deleteElement(int value) {
+        if (this.getValue() == value) {
+            return this.next;
+        } else if (this.next != null) {
+            this.setNext(this.next.deleteElement(value));
+        }
+        return this;
+    }
+
+    /**
+     * Gets the value of the current instance
+     *
+     * @return the value
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the current instance
+     *
+     * @param value the value to set
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    /**
+     * Sets the value 'next' of the current instance to the inserted instance of
+     * type Element
+     *
+     * @param next the next to set
+     */
+    public void setNext(Element next) {
+        this.next = next;
+    }
+
+    /*
+     * You can find this method in Prof. Häusleins slides but it is 
+     * not necessary for the exercise
+     *
+     public void printList() {
+     System.out.println(getValue());
+     if (this.next != null) {
+     this.next.printList();
+     }
+     }
+     */
+}
