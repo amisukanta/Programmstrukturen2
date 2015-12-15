@@ -1,0 +1,55 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb05;
+
+/**
+ *
+ * @author Robin
+ */
+public class Grp27_ueb05 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        /*
+        Circle kreis = new Circle("red",3); 
+        Triangle dreieck = new Triangle("black",3,3,3); 
+        Triangle dreieck2 = new Triangle("white",3.01,3,3); 
+        Rectangle rechteck = new Rectangle("blue",3,3);  
+        Square viereck = new Square("green",32);
+
+        System.out.println(kreis.toString());
+        System.out.println(dreieck.toString());
+        System.out.println(rechteck.toString());
+        System.out.println(viereck.toString());
+        
+        Element kreisElement = new Element();
+        kreisElement.setValue(kreis);
+        kreisElement = kreisElement.insertElement(dreieck);
+        kreisElement = kreisElement.insertElement(rechteck);
+        kreisElement = kreisElement.insertElement(viereck);
+        kreisElement = kreisElement.insertElement(dreieck2);
+
+        System.out.println(kreisElement.toString());
+                */
+        erstelleFiguren();
+    }
+    
+    private static void erstelleFiguren(){
+        Circle kreis = new Circle("green",3);
+        Rectangle rechteck = new Rectangle("red",7,8);
+        Triangle dreieck = new Triangle("white",7,8,4);
+        Element element1 = new Element(kreis);
+        Element element2 = new Element(rechteck);
+        Element element3 = new Element(dreieck);
+        
+        System.out.printf("%s %s %s\n",element1.toString(), kreis.getDescription(), kreis.toString());
+        System.out.printf("%s %s %s\n",element3.toString(), dreieck.getDescription(), dreieck.toString());
+        System.out.printf("%s %s %s\n",element2.toString(), rechteck.getDescription(), rechteck.toString());
+    }
+    
+}

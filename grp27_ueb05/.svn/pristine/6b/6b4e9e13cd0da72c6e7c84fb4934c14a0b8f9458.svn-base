@@ -1,0 +1,37 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb05;
+
+/**
+ *
+ * @author Robin
+ */
+public class Rectangle extends Figure {
+
+    private double edge1;
+    private double edge2;
+
+    Rectangle(String color, double edge1, double edge2) {
+        super(color);
+        this.edge1 = edge1;
+        this.edge2 = edge2;
+    }
+
+    @Override
+    public double getArea() {
+        return edge1 * edge2;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * (edge1 + edge2);
+    }
+
+    public String getDescription() {
+        return String.format("Kantenlängen (%5.2f, %5.2f)", edge1, edge2);
+    }
+
+}

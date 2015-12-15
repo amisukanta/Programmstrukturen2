@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb05;
+
+/**
+ *
+ * @author Robin
+ */
+public class Grp27_ueb05 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Circle kreis = new Circle("red",3);
+        System.out.println(kreis.getDescription());
+        Triangle dreieck = new Triangle("red",3,3,3);
+        System.out.println(dreieck.getDescription());
+        Rectangle rechteck = new Rectangle("red",3,3);
+        System.out.println(rechteck.getDescription());
+        Square viereck = new Square("red",32);
+        System.out.println(viereck.getDescription());
+        System.out.println(viereck.toString());
+        
+        Element test = new Element();
+        test.setValue(kreis);
+        System.out.println(test.toString());
+    }
+    
+}

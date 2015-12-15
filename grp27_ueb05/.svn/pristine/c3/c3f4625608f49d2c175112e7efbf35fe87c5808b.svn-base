@@ -1,0 +1,50 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb05;
+
+/**
+ *
+ * @author Robin
+ */
+public class Figure {
+
+    protected Color color;
+    protected final static double EPSILON = 0.001;
+
+    Figure(Color color) {
+        this.color = color;
+    }
+  
+    Figure() {
+        this.color = null;
+    }
+
+    public double getArea() {
+
+        return 0;
+    }
+
+    public double getPerimeter() {
+
+        return 0;
+    }
+
+    public int compare(Figure inputFigure) {
+
+        if (this.getArea() > inputFigure.getArea()) {
+            return 1;
+        } else if (Math.abs(this.getArea() - inputFigure.getArea()) < EPSILON) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Umfang: %6.2f, Fläche: %7.2f", getPerimeter(), getArea());
+    }
+}

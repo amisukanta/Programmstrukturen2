@@ -1,0 +1,88 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb05;
+
+/**
+ *
+ * @author Robin
+ */
+public class Grp27_ueb05 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        /*
+         Circle kreis = new Circle("red",3); 
+         Triangle dreieck = new Triangle("black",3,3,3); 
+         Triangle dreieck2 = new Triangle("white",3.01,3,3); 
+         Rectangle rechteck = new Rectangle("blue",3,3);  
+         Square viereck = new Square("green",32);
+
+         System.out.println(kreis.toString());
+         System.out.println(dreieck.toString());
+         System.out.println(rechteck.toString());
+         System.out.println(viereck.toString());
+        
+         Element kreisElement = new Element();
+         kreisElement.setValue(kreis);
+         kreisElement = kreisElement.insertElement(dreieck);
+         kreisElement = kreisElement.insertElement(rechteck);
+         kreisElement = kreisElement.insertElement(viereck);
+         kreisElement = kreisElement.insertElement(dreieck2);
+
+         System.out.println(kreisElement.toString());
+         */
+        erstelleFiguren();
+    }
+
+    private static void erstelleFiguren() {
+
+        System.out.println("Füge folgende Figuren zu:");
+
+        Element list = new Element(new Triangle(7, 8, 4));
+        //System.out.printf("%s",element1.toString()); 
+        //Element.resetCounter();
+
+        Element element2 = new Element(new Circle(new Color("green"), 3));
+        //System.out.printf("%s",element2.toString());
+
+        Element element3 = new Element(new Rectangle(new Color("red"), 7, 8));
+        //System.out.printf("%s",element3.toString());
+
+        Element element4 = new Element(new Square(new Color("yellow"), 2.5));
+        //System.out.printf("%s",element4.toString());
+
+        Element element5 = new Element(new Rectangle(new Color("red"), 14, 16));
+        //System.out.printf("%s",element5.toString());
+        
+        Element element6 = new Element(new Triangle(14, 16, 8));
+        
+        Element element7 = new Element(new Circle(new Color("green"), 6));
+        
+        Element element8 = new Element(new Square(new Color("yellow"), 5));
+        
+        Element element9 = new Element(new Triangle(new Color("white"), 3.5,4,2));
+        
+        Element element10 = new Element(new Circle(new Color("green"), 1.5));
+        
+        Element element11 = new Element(new Square(new Color(new int[]{10, 128, 255}), 1.25));
+
+        list = list.addElementInOrder(element2.getValue());
+        list = list.addElementInOrder(element3.getValue());
+        list = list.addElementInOrder(element4.getValue());
+        list = list.addElementInOrder(element5.getValue());
+        list = list.addElementInOrder(element6.getValue());
+        list = list.addElementInOrder(element7.getValue());
+        list = list.addElementInOrder(element8.getValue());
+        list = list.addElementInOrder(element9.getValue());
+        list = list.addElementInOrder(element10.getValue());
+        list = list.addElementInOrder(element11.getValue());
+ 
+
+    }
+
+}
