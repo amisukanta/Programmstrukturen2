@@ -47,27 +47,27 @@ public class Grp27_ueb05 {
         //System.out.printf("%s",element1.toString()); 
         //Element.resetCounter();
 
-        Element element2 = new Element(new Circle(Color.stringToColor("green"), 3));
+        Element element2 = new Element(new Circle(new Color("green"), 3));
         //System.out.printf("%s",element2.toString());
 
-        Element element3 = new Element(new Rectangle(Color.stringToColor("red"), 7, 8));
+        Element element3 = new Element(new Rectangle(new Color("red"), 7, 8));
         //System.out.printf("%s",element3.toString());
 
-        Element element4 = new Element(new Square(Color.stringToColor("yellow"), 2.5));
+        Element element4 = new Element(new Square(new Color("yellow"), 2.5));
         //System.out.printf("%s",element4.toString());
 
-        Element element5 = new Element(new Rectangle(Color.stringToColor("red"), 14, 16));
+        Element element5 = new Element(new Rectangle(new Color("red"), 14, 16));
         //System.out.printf("%s",element5.toString());
         
         Element element6 = new Element(new Triangle(14, 16, 8));
         
-        Element element7 = new Element(new Circle(Color.stringToColor("green"), 6));
+        Element element7 = new Element(new Circle(new Color("green"), 6));
         
-        Element element8 = new Element(new Square(Color.stringToColor("yellow"), 5));
+        Element element8 = new Element(new Square(new Color("yellow"), 5));
         
-        Element element9 = new Element(new Triangle(Color.stringToColor("white"), 3.5,4,2));
+        Element element9 = new Element(new Triangle(new Color("white"), 3.5,4,2));
         
-        Element element10 = new Element(new Circle(Color.stringToColor("green"), 1.5));
+        Element element10 = new Element(new Circle(new Color("green"), 1.5));
         
         Element element11 = new Element(new Square(new Color(new int[]{10, 128, 255}), 1.25));
 

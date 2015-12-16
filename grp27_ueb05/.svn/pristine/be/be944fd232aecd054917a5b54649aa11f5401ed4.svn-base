@@ -31,9 +31,9 @@ public class Color {
         // Input: Element vom Farbenum
         Color color3 = new Color(ColorName.YELLOW); // YELLOW
         // Input: Farbe als String
-        Color color4 = Color.stringToColor("blueviolet"); // BLUEVIOLET
+        Color color4 = new Color("blueviolet"); // BLUEVIOLET
         // Input: Falscher String
-        Color color5 = Color.stringToColor("gibtsNichtFarbe"); // NULL
+        Color color5 = new Color("gibtsNichtFarbe"); // FEHLER
 
         assert Arrays.equals(new int[]{0xFF, 0, 0}, color.getRGB());
         assert "RED".equals(color.toString());
@@ -43,15 +43,16 @@ public class Color {
         assert "YELLOW".equals(color3.toString());
         assert Arrays.equals(new int[]{0x8A, 0x2B, 0xE2}, color4.getRGB());
         assert "BLUEVIOLET".equals(color4.toString());
-        assert color5 == null;
-
+        assert Arrays.equals(new int[]{0x00, 0x00, 0x00}, color5.getRGB());
+        assert "BLACK".equals(color5.toString());
 
         //Konstruktor für einzelne Farbwerte ergibt undefinierte Farbe
-        //color = new Color(10, 128, 255);
-        //assert Arrays.equals(new int[]{10, 128, 255}, color.getRGB());
-        //assert "# A80FF".equals(color.toString());
+        color = new Color(10, 128, 255);
+        assert Arrays.equals(new int[]{10, 128, 255}, color.getRGB());
+        assert "# A80FF".equals(color.toString());
 
-        //assert 9055202 == color4.getPackedRGB();
+        assert 9055202 == color4.getPackedRGB();
+        
 
     }
 
@@ -66,6 +67,7 @@ public class Color {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        //this.blue = Integer.parseInt(Integer.toHexString(blue), 16);
     }
 
     public Color(int farbArray[]) {
@@ -76,14 +78,11 @@ public class Color {
         this(COLOR_VALUES[nameOfColor.ordinal()]);
     }
 
-    public static Color stringToColor(String nameOfColor) {
-        if (isColorName(nameOfColor.toUpperCase())) {
-            return new Color(ColorName.valueOf(nameOfColor.toUpperCase()));
-        } else {
-            return null;
-        }
+    public Color(String nameOfColor) {
+        this(ColorName.valueOf(nameOfColor.toUpperCase()));
     }
-
+    
+    
     public static boolean isColorName(String nameOfInputColor) {
 
         for (ColorName nameOfEnumColor : ColorName.values()) {
@@ -116,11 +115,13 @@ public class Color {
     public int getPackedRGB2() {
         return Integer.parseInt(Integer.toHexString(this.red).toUpperCase() + Integer.toHexString(this.green).toUpperCase() + Integer.toHexString(this.blue).toUpperCase(), 16);
     }
-
-    public int getPackedRGB() {
-
-        return ((this.red << 16) + (this.green << 8) + (this.blue << 1));
+    
+    
+    public int getPackedRGB(){
+        
+      return ((this.red << 16) + (this.green << 8) + (this.blue << 1));
     }
+
 
     @Override
     public String toString() {

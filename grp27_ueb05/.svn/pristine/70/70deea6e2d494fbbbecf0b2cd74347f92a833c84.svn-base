@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package grp27_ueb05;
 
 /**
@@ -9,18 +14,10 @@ public class Figure {
     protected Color color;
     protected final static double EPSILON = 0.001;
 
-    /**
-     * creates an object of type figure and sets the color value
-     *
-     * @param color
-     */
     Figure(Color color) {
         this.color = color;
     }
 
-    /**
-     * creates an object of type figure (standard constructor)
-     */
     Figure() {
         this.color = null;
     }
@@ -45,14 +42,6 @@ public class Figure {
         return 0;
     }
 
-    /**
-     * compares the instance of figure that calls this methods with the input
-     * figure by the area
-     *
-     * @param inputFigure an object from type Figure
-     * @return -1 if input figure is bigger, 0 if both figures have same size, 1
-     * if input figure is smaller
-     */
     public int compare(Figure inputFigure) {
 
         if (this.getArea() > inputFigure.getArea()) {
@@ -64,10 +53,6 @@ public class Figure {
         }
     }
 
-    /**
-     * gives back a string 
-     * @return 
-     */
     @Override
     public String toString() {
         return String.format("Umfang: %6.2f, Fläche: %7.2f", getPerimeter(), getArea());
