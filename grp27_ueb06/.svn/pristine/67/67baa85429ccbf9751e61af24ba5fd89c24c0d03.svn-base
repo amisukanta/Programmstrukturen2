@@ -1,0 +1,16 @@
+package grp27_ueb06;
+
+/**
+ *
+ * @author Robin
+ */
+public class Grp27_ueb06 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+    }
+    
+}

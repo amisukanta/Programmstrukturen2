@@ -1,0 +1,281 @@
+package grp27_ueb06;
+
+/**
+ * eine Parkreihe wird abgebildet Initial besteht eine Reihe aus einer einzigen
+ * riesigen Lücke.
+ *
+ * @author Gerit
+ */
+public class Row {
+
+    int length;
+    GapList gapList;
+
+    /**
+     * Konstruktor enthält Länge, damit gleich eine Lücke über diese Länge
+     * angelegt werden kann
+     *
+     * @param length Länge der Reihe
+     */
+    public Row(int length) {
+        GapList list = new GapList();
+        list = list.insert(new Gap(0, length));
+        this.gapList = list;
+        this.length = length;
+    }
+
+    /**
+     * Konstruktor zum Testen bekommt alle Belegungen in Array übergeben
+     *
+     * @param length Länge der Reihe
+     * @param carList zweidimensionales Array [alle Belegungen][Position und
+     * Länge der Belegung]
+     */
+    private Row(int length, int[][] carList) {
+        GapList list = new GapList();
+        list = list.insert(new Gap(0, length));
+
+        for (int[] carList1 : carList) {
+            list = list.remove(new Gap(carList1[0], carList1[1]));
+        }
+
+        this.gapList = list;
+        this.length = length;
+    }
+
+    /**
+     * liefert die Länge der Reihe
+     *
+     * @return die Länge der Reihe
+     */
+    public int getLength() {
+
+        return length;
+    }
+
+    /**
+     * prüft, ob die Reihe aus einer einzigen Lücke besteht
+     *
+     * @return true, wenn die Reihe aus einer einzigen Lücke besteht
+     */
+    public boolean isEmpty() {
+
+        return gapList.hasJustOneElement();
+    }
+
+    /**
+     * prüft, ob keine Lücken enthalten sind
+     *
+     * @return true, wenn keine Lücke enthalten ist
+     */
+    public boolean isOptimallyFilled() {
+
+        return !gapList.hasGap(1);
+    }
+
+    /**
+     * prüft, ob eine freie Lücke für das Auto vorhanden ist
+     *
+     * @param carLength Länge des Autos
+     * @return true, wenn Lücke vorhanden
+     */
+    public boolean hasFreeGap(int carLength) {
+
+        return gapList.hasGap(carLength);
+    }
+
+    /**
+     * liefert die größte Lücke in der Reihe
+     *
+     * @return die größte Lücke in der Reihe
+     */
+    public int getLargestGap() {
+
+        return gapList.getLargestGap();
+    }
+
+    /**
+     * liefert die Position der kleinsten pasenden Lücke in der Reihe
+     *
+     * @param carlength Länge des unterzubringenden Autos
+     * @return die Position der kleinsten passenden Lücke in der Reihe
+     */
+    public int findBestPosition(int carlength) {
+
+        return gapList.findPositionFor(carlength);
+    }
+
+    /**
+     * belegt Lücke
+     *
+     * @param position an der Position
+     * @param carLength mit der Länge
+     * @return true, wenn die Lücke noch frei war
+     */
+    public boolean occupyPlace(int position, int carLength) {
+
+        return gapList.hasGapAt(position, carLength);
+    }
+
+    /**
+     * belegt Lücke für dieses Auto
+     *
+     * @param carLength
+     * @return Position des Autos, -1, wenn keine passende Lücke vorhanden
+     */
+    public int parkCar(int carLength) {
+
+        int bestPosition = this.findBestPosition(carLength);
+
+        if (bestPosition != -1) {
+            gapList = gapList.remove(bestPosition, carLength);
+            return bestPosition;
+        } else {
+            return -1;
+        }
+
+    }
+
+    /**
+     * gibt den Platz an position wieder frei. Die Angabe muss nicht exakt sein,
+     * sondern darf mit einer bestehenden Lücke überlappen. Es wird dann nur der
+     * belegte Teil freigegeben.
+     *
+     * @param position Startposition der Freigabe
+     * @param length Länge der Freigabe
+     */
+    public void freePlaceAt(int position, int length) {
+        gapList = gapList.insert(new Gap(position, length + position));
+    }
+
+    /**
+     * überschreibt equals()
+     *
+     * @param obj soll auch eine Row sein
+     * @return true, wenn Reihen gleich sind
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Row) {
+
+            Row rowObject = (Row) obj;
+
+            return this.gapList.equals(rowObject.gapList);
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * liefert eine Stringdarstellung der Lückenliste
+     *
+     * @return eine Stringdarstellung der Lückenliste
+     */
+    @Override
+    public String toString() {
+        return this.gapList.toString();
+    }
+
+    // --- Tests ------------------------------------------------
+    public static void main(String[] args) {
+        testKonstruktoren();
+        testEqual();
+        testFreePlaceAt();
+    }
+
+    private static void testKonstruktoren() {
+        int[][] carList2 = {
+            {0, 5}, {7, 10}, {15, 20}, {25, 30}, {100, 150}
+        };
+        int[][] carList3 = {
+            {0, 10}, {10, 30},};
+
+        int[][] carList4 = {
+            {0, 10}, {20, 30}, {35, 40}, {80, 100}};
+
+        Row reihe = new Row(100);
+        Row reihe2 = new Row(150, carList2);
+        Row reihe3 = new Row(30, carList3);
+        Row reihe4 = new Row(100, carList4);
+
+        assert 100 == reihe.getLength();
+        assert 150 == reihe2.getLength();
+        assert true == reihe.isEmpty();
+        assert false == reihe2.isEmpty();
+        assert false == reihe.isOptimallyFilled();
+        assert true == reihe3.isOptimallyFilled();
+        assert false == reihe3.hasFreeGap(5);
+        assert true == reihe.hasFreeGap(5);
+        assert 100 == reihe.getLargestGap();
+        assert 70 == reihe2.getLargestGap();
+        assert 0 == reihe3.getLargestGap();
+        assert 5 == reihe2.findBestPosition(2);
+        assert 10 == reihe2.findBestPosition(5);
+        assert 40 == reihe4.findBestPosition(20);
+        assert true == reihe4.occupyPlace(10, 10);
+        assert true == reihe4.occupyPlace(31, 4);
+
+        assert "  5.. 7,  10.. 15,  20.. 25,  30.. 100".equals(reihe2.gapList.toString());
+
+        assert 5 == reihe2.parkCar(2);
+        assert "  10.. 15,  20.. 25,  30.. 100".equals(reihe2.gapList.toString());
+
+        assert 10 == reihe2.parkCar(5);
+        assert "  20.. 25,  30.. 100".equals(reihe2.gapList.toString());
+
+        assert 30 == reihe2.parkCar(20);
+        assert "  20.. 25,  50.. 100".equals(reihe2.gapList.toString());
+
+    }
+
+    private static void testFreePlaceAt() {
+
+        int[][] carList2 = {{0, 5}, {7, 10}, {15, 20}, {25, 30}, {100, 150}};
+
+        Row reihe = new Row(150, carList2);
+        //System.out.println(reihe.toString());
+        assert "  5.. 7,  10.. 15,  20.. 25,  30.. 100".equals(reihe.gapList.toString());
+
+        reihe.freePlaceAt(0, 20);
+        //System.out.println(reihe.toString());
+        assert "  0.. 25,  30.. 100".equals(reihe.gapList.toString()) : "free place, across three car spots, went wrong";
+
+        reihe.freePlaceAt(120, 5);
+        //System.out.println(reihe.toString());
+        assert "  0.. 25,  30.. 100,  120.. 125".equals(reihe.gapList.toString()) : "free place, in between a car spot, went wrong";
+
+        reihe.freePlaceAt(25, 5);
+        //System.out.println(reihe.toString());
+        assert "  0.. 100,  120.. 125".equals(reihe.gapList.toString()) : "free place, across one car spot, went wrong";
+
+        reihe.freePlaceAt(50, 25);
+        //System.out.println(reihe.toString());
+        assert "  0.. 100,  120.. 125".equals(reihe.gapList.toString()) : "free place, across a free place, went wrong";
+
+        System.out.println("Test freePlaceAt() successful");
+
+    }
+
+    private static void testEqual() {
+        int[][] carList1 = {{0, 10}, {10, 30},};
+
+        int[][] carList2 = {{0, 10}, {10, 30},};
+
+        int[][] carList3 = {{0, 10}, {80, 100}};
+
+        Row reihe1 = new Row(150, carList1);
+        Row reihe2 = new Row(150, carList2);
+        Row reihe3 = new Row(100, carList1);
+        Row reihe4 = new Row(150, carList3);
+
+        assert true == reihe1.equals(reihe2) : "equal rows as unequal detected";
+        assert false == reihe2.equals(reihe3) : "unequal rows as equal detected";
+        assert false == reihe1.equals(reihe3) : "unequal rows as equal detected";
+        assert false == reihe1.equals(reihe4) : "unequal rows as equal detected";
+        assert true == reihe4.equals(reihe4) : "equal rows as unequal detected";
+
+        System.out.println("Test equal() successful");
+    }
+
+}

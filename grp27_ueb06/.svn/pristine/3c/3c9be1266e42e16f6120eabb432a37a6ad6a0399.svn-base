@@ -1,0 +1,147 @@
+package ueb06;
+
+/**
+ * eine Parkreihe wird abgebildet
+ * Initial besteht eine Reihe aus einer einzigen riesigen Lücke.
+ * @author Gerit
+ */
+public class Row {
+
+    int length;
+    GapList gapList;
+
+    /**
+     * Konstruktor enthält Länge, damit gleich eine Lücke über diese Länge
+     * angelegt werden kann
+     * @param length Länge der Reihe
+     */
+    public Row(int length) {
+        //TODO Code erzeugen
+    }
+    
+    /**
+     * Konstruktor zum Testen bekommt alle Belegungen in Array übergeben
+     * @param length   Länge der Reihe
+     * @param carList zweidimensionales Array [alle Belegungen][Position und Länge der Belegung]
+     */
+    private Row(int length, int[][] carList) {
+        //TODO Code erzeugen
+    }
+    
+    /**
+     * liefert die Länge der Reihe
+     * @return die Länge der Reihe
+     */
+    public int getLength() {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return 0;
+    }
+
+    /**
+     * prüft, ob die Reihe aus einer einzigen Lücke besteht
+     * @return true, wenn die Reihe aus einer einzigen Lücke besteht
+     */
+    public boolean isEmpty() {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+
+    /**
+     * prüft, ob keine Lücken enthalten sind
+     * @return true, wenn keine Lücke enthalten ist
+     */
+    public boolean isOptimallyFilled() {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+
+    /**
+     * prüft, ob eine freie Lücke für das Auto vorhanden ist
+     * @param carLength Länge des Autos
+     * @return true, wenn Lücke vorhanden
+     */
+    public boolean hasFreeGap(int carLength) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+
+    /**
+     * liefert die größte Lücke in der Reihe
+     * @return die größte Lücke in der Reihe
+     */
+    public int getLargestGap() {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return 0;
+    }
+
+    /**
+     * liefert die Position der kleinsten pasenden Lücke in der Reihe
+     * @param carlength Länge des unterzubringenden Autos
+     * @return die Position der kleinsten passenden Lücke in der Reihe
+     */
+    public int findBestPosition(int carlength) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return 0;
+    }
+
+    /**
+     * belegt Lücke
+     * @param position  an der Position
+     * @param carLength mit der Länge
+     * @return true, wenn die Lücke noch frei war
+     */
+    public boolean occupyPlace(int position, int carLength) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+
+    /**
+     * belegt Lücke für dieses Auto
+     * @param carLength
+     * @return Position des Autos, -1, wenn keine passende Lücke vorhanden
+     */
+    public int parkCar(int carLength) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return 0;
+    }
+
+    /**
+     * gibt den Platz an position wieder frei
+     * @param position Startposition der Freigabe
+     * @param length   Länge der Freigabe
+     * @return true, wenn die Stelle besetzt war
+     */
+    public boolean freePlaceAt(int position, int length) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+    
+    /**
+     * überschreibt equals()
+     * @param obj soll auch eine Row sein
+     * @return true, wenn Reihen gleich sind
+     */
+    @Override
+    public boolean equals(Object obj) {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return true;
+    }
+    
+    /**
+     * liefert eine Stringdarstellung der Lückenliste
+     * @return eine Stringdarstellung der Lückenliste
+     */
+    @Override
+    public String toString() {
+        //TODO Rückgabe so falsch, soll nur kompilierbaren Code erzeugen
+        return null;
+    }
+
+    // --- Tests ------------------------------------------------
+     
+    
+    public static void main(String[] args) {
+        //TODO  Code erzeugen
+    }
+
+}
