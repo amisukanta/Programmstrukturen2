@@ -1,0 +1,208 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package grp27_ueb07;
+
+/**
+ *
+ * @author Robin
+ */
+public class Grp27_ueb07 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+
+
+        testIsOptimallyFilled();
+        testIsEmpty();
+        testHasFreeGap();
+        testGetLargestGap();
+        testFindBestPosition();
+        testOccupyPlace();
+        testParkCar();
+        testFreePlaceAt();
+        testEqual();
+    }
+
+    private static void testIsOptimallyFilled() {
+
+        int[][] carList1 = {{0, 10}, {10, 20}};
+
+        ArrayRow reihe1 = new ArrayRow(100);
+        ArrayRow reihe2 = new ArrayRow(30, carList1);
+
+        assert false == reihe1.isOptimallyFilled();
+        assert true == reihe2.isOptimallyFilled();
+
+        System.out.println("Test isOptimallyFilled() successful");
+    }
+
+     private static void testIsEmpty() {
+
+        int[][] carList1 = {{0, 10}, {10, 30},};
+        int[][] carList3 = {{0, 20}};
+        int[][] carList4 = {{0, 20}, {22, 30}};
+
+        ArrayRow reihe1 = new ArrayRow(100);
+        ArrayRow reihe2 = new ArrayRow(30, carList1);
+        ArrayRow reihe3 = new ArrayRow(30, carList3);
+        ArrayRow reihe4 = new ArrayRow(30, carList4);
+
+        assert true == reihe1.isEmpty();
+        assert false == reihe2.isEmpty();
+        assert false == reihe3.isEmpty();
+        assert false == reihe4.isEmpty();
+
+        System.out.println("Test isEmpty() successful");
+    }
+    
+   private static void testHasFreeGap() {
+        int[][] carList1 = {{0, 10}, {10, 20},};
+        int[][] carList2 = {{0, 5}, {7, 10}, {22, 8}};
+
+        ArrayRow reihe1 = new ArrayRow(100);
+        ArrayRow reihe2 = new ArrayRow(30, carList1);
+        ArrayRow reihe3 = new ArrayRow(30, carList2);
+
+        assert true == reihe1.hasFreeGap(5);
+        assert false == reihe2.hasFreeGap(5);
+        assert true == reihe3.hasFreeGap(5);
+        assert false == reihe3.hasFreeGap(6);
+
+        System.out.println("Test hasFreeGap() successful");
+
+    }
+
+      private static void testGetLargestGap() {
+        int[][] carList1 = {{0, 5}, {7, 10}, {22, 10}, {37, 3}, {100, 150}};
+        int[][] carList2 = {{0, 10}, {10, 20}};
+
+        ArrayRow reihe = new ArrayRow(100);
+        ArrayRow reihe2 = new ArrayRow(150, carList1);
+        ArrayRow reihe3 = new ArrayRow(30, carList2);
+
+        assert 100 == reihe.getLargestGap();
+        assert 110 == reihe2.getLargestGap();
+        assert 0 == reihe3.getLargestGap();
+
+        System.out.println("Test getLargestGap() successful");
+    }
+
+    private static void testFindBestPosition() {
+
+        int[][] carList = {{0, 10}, {23, 7}, {33, 7}, {42, 3}, {46, 4}};
+        ArrayRow reihe = new ArrayRow(150, carList);
+
+        //System.out.println(reihe.toString());
+        assert "{ 10.. 23,  30.. 33,  40.. 42,  45.. 46,  50..150}".equals(reihe.toString());
+
+        assert 40 == reihe.findBestPosition(2);
+
+        assert 50 == reihe.findBestPosition(20);
+
+        assert 10 == reihe.findBestPosition(10);
+
+        assert -1 == reihe.findBestPosition(110);
+
+        System.out.println("Test findBestPosition() successful");
+    }
+
+    private static void testOccupyPlace() {
+
+        int[][] carList = {{0, 10}, {20, 10},{40,10}};
+        ArrayRow reihe = new ArrayRow(100, carList);
+
+        assert true == reihe.occupyPlace(10, 10);
+        assert true == reihe.occupyPlace(50, 8);
+        assert false == reihe.occupyPlace(10, 11);
+        assert false == reihe.occupyPlace(9, 10);
+
+        System.out.println("Test occupyPlace() successful");
+
+    }
+
+    private static void testParkCar() {
+
+        int[][] carList = {{0, 10}, {23, 7}, {33, 7}, {42, 3}, {46, 4}};
+        ArrayRow reihe = new ArrayRow(150, carList);
+
+        //System.out.println(reihe.toString());
+        assert "{ 10.. 23,  30.. 33,  40.. 42,  45.. 46,  50..150}".equals(reihe.toString());
+
+        assert 40 == reihe.parkCar(2);
+        //System.out.println(reihe.toString());
+        assert "{ 10.. 23,  30.. 33,  45.. 46,  50..150}".equals(reihe.toString());
+
+        assert 50 == reihe.parkCar(20);
+        //System.out.println(reihe.toString());
+        assert "{ 10.. 23,  30.. 33,  45.. 46,  70..150}".equals(reihe.toString());
+
+        assert 10 == reihe.parkCar(10);
+        //System.out.println(reihe.toString());
+        assert "{ 20.. 23,  30.. 33,  45.. 46,  70..150}".equals(reihe.toString());
+
+        assert -1 == reihe.parkCar(100);
+        //System.out.println(reihe.toString());
+        assert "{ 20.. 23,  30.. 33,  45.. 46,  70..150}".equals(reihe.toString());
+
+        System.out.println("Test parkCar() successful");
+    }
+
+    private static void testFreePlaceAt() {
+
+        int[][] carList = {{0, 5}, {7, 3}, {15, 5}, {25, 5}, {100, 50}};
+        ArrayRow reihe = new ArrayRow(150, carList);
+
+        //System.out.println(reihe.toString());
+        assert "{  5..  7,  10.. 15,  20.. 25,  30..100}".equals(reihe.toString());
+
+        reihe.freePlaceAt(0, 20);
+        //System.out.println(reihe.toString());
+        assert "{  0.. 25,  30..100}".equals(reihe.toString()) : "free place, across three car spots, went wrong";
+
+        reihe.freePlaceAt(120, 5);
+        //System.out.println(reihe.toString());
+        assert "{  0.. 25,  30..100, 120..125}".equals(reihe.toString()) : "free place, in between a car spot, went wrong";
+
+        reihe.freePlaceAt(25, 5);
+        //System.out.println(reihe.toString());
+        assert "{  0..100, 120..125}".equals(reihe.toString()) : "free place, across one car spot, went wrong";
+
+        reihe.freePlaceAt(50, 25);
+        //System.out.println(reihe.toString());
+        assert "{  0..100, 120..125}".equals(reihe.toString()) : "free place, across a free place, went wrong";
+
+        reihe.freePlaceAt(145, 5);
+        //System.out.println(reihe.toString());
+        assert "{  0..100, 120..125, 145..150}".equals(reihe.toString()) : "free place, across one car spot at the end of the row, went wrong";
+
+        System.out.println("Test freePlaceAt() successful");
+
+    }
+
+    private static void testEqual() {
+        int[][] carList1 = {{0, 10}, {10, 30},};
+
+        int[][] carList2 = {{0, 10}, {10, 30},};
+
+        int[][] carList3 = {{0, 10}, {80, 100}};
+
+        ArrayRow reihe1 = new ArrayRow(150, carList1);
+        ArrayRow reihe2 = new ArrayRow(150, carList2);
+        ArrayRow reihe3 = new ArrayRow(100, carList1);
+        ArrayRow reihe4 = new ArrayRow(150, carList3);
+
+        assert true == reihe1.equals(reihe2) : "equal rows as unequal detected";
+        assert false == reihe2.equals(reihe3) : "unequal rows as equal detected";
+        assert false == reihe1.equals(reihe3) : "unequal rows as equal detected";
+        assert false == reihe1.equals(reihe4) : "unequal rows as equal detected";
+        assert true == reihe4.equals(reihe4) : "equal rows as unequal detected";
+
+        System.out.println("Test equal() successful");
+    }
+
+}

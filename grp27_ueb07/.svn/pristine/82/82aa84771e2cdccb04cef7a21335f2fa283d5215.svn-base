@@ -1,0 +1,552 @@
+package grp27_ueb07;
+
+//import static java.lang.Integer.max;
+
+/**
+ *
+ * @author Gerit
+ */
+public class GapListElement implements GapList {
+
+    /**
+     * Attribute der Liste sind ein nächstes Element und eine Lücke als Nutzlast
+     */
+    protected GapList next;
+    protected Gap payload;
+
+    /**
+     * Konstruktor für ein neues Listenelement
+     *
+     * @param gap Lücke als Nutzlast
+     * @param tail Referenz auf weitere Listenelemente
+     */
+    public GapListElement(Gap gap, GapList tail) {
+        this.payload = gap;
+        this.next = tail;
+    }
+
+    /**
+     * liefert die Nutzlast (Getter)
+     *
+     * @return die Nutzlast
+     */
+    public Gap getPayload() {
+        return this.payload;
+    }
+
+    /**
+     * liefert das nächste Element (Getter)
+     *
+     * @return das nächste Element
+     */
+    public GapList getNext() {
+        return this.next;
+    }
+
+    /**
+     * liefert false, da mindestens ein Listenelement vorhanden sein muss
+     *
+     * @return false, da mindestens ein Listenelement vorhanden sein muss
+     */
+    @Override
+    public boolean isEmpty() {
+
+        return false;
+    }
+
+    /**
+     * liefert Länge der Liste
+     *
+     * @return Länge der Liste
+     */
+    @Override
+    public int length() {
+
+        return 1 + this.next.length();
+
+    }
+
+    /**
+     * prüft, ob die gesamte Liste nur aus einem Element (außer dem Leerelement)
+     * besteht
+     *
+     * @return true, wenn die gesamte Liste nur aus einem Element (außer dem
+     * Leerelement) besteht
+     */
+    @Override
+    public boolean hasJustOneElement() {
+
+        return this.next.isEmpty();
+    }
+
+    /**
+     * prüft, ob Lücke mit dieser Länge vorhanden ist
+     *
+     * @param length Länge der benötigten Lücke
+     * @return true, wenn eine Lücke mit dieser Länge vorhanden ist
+     */
+    @Override
+    public boolean hasGap(int length) {
+
+        if (this.getPayload().getLength() >= length) {
+            return true;
+        } else {
+            return this.next.hasGap(length);
+        }
+    }
+
+    /**
+     * enthält eine Lücke an der Position, Startposition und Länge muss nicht
+     * mit einer bestehenden übereinstimmen
+     *
+     * @param position Position der Lücke
+     * @param length Länge der Lücke
+     * @return true, wenn Lücke gefunden wurde, die Lücke mit den Angaben
+     * enthält
+     */
+    @Override
+    public boolean hasGapAt(int position, int length) {
+        if (this.getPayload().contains(new Gap(position, position + length))) {
+            return true;
+        } else {
+            return this.next.hasGapAt(position, length);
+        }
+    }
+
+    /**
+     * liefert die Länge der größten Lücke
+     *
+     * @param yetLargest die bisher größte Länge
+     * @return die Länge der größten Lücke
+     */
+    
+    @Override
+    public int getLargestGap(int yetLargest) {
+        
+        return this.getPayload().getLength() > this.next.getLargestGap(yetLargest) ? this.getPayload().getLength() : this.next.getLargestGap();
+    }
+
+    /**
+     * liefert die Länge der größten Lücke in der Liste
+     *
+     * @return die Länge der größten Lücke
+     */
+    @Override
+    public int getLargestGap() {
+
+        return this.getPayload().getLength() > this.next.getLargestGap() 
+                ? this.getPayload().getLength() 
+                : this.next.getLargestGap();
+    }
+
+    /**
+     * liefert die Position der kleinsten Lücke, die größer ist als minLength
+     *
+     * @param minLength Mindestgröße der gesuchten Lücke
+     * @param yetMinLength bisher kleinste gefundene Lücke mit Mindestgröße
+     * @param foundPosition Position der bisher kleinsten gefundenen Lücke mit
+     * Mindestgröße
+     * @return Position der kleinsten Lücke, die größer ist als minLength, -1,
+     * wenn keine passende Lücke gefunden wurde
+     */
+    @Override
+    public int getSmallestGapBiggerThan(int minLength, int yetMinLength, int foundPosition) {
+        if (this.getPayload().getLength() >= minLength && this.getPayload().getLength() < yetMinLength) {
+
+            yetMinLength = this.getPayload().getLength();
+            foundPosition = this.getPayload().getStart();
+
+        }
+        return this.next.getSmallestGapBiggerThan(minLength, yetMinLength, foundPosition);
+    }
+
+    /**
+     * sucht eine passende Lücke, die mindestens die übergebene Länge bietet,
+     * jedoch möglichst klein ist
+     *
+     * @param length
+     * @return passende Lücke, die mindestens die übergebene Länge bietet,
+     * jedoch möglichst klein ist, -1, wenn keine passende Lücke gefunden wurde
+     */
+    @Override
+    public int findPositionFor(int length) {
+
+        return this.getSmallestGapBiggerThan(length, Integer.MAX_VALUE, -1);
+    }
+
+    /**
+     * belegt Platz an der angegebenen Position mit der angegebenen Länge.
+     * Dadurch kann eine Lücke komplett verschwinden (ausgefüllt werden), oder
+     * verkürzt werden oder zwei Lücken entstehen, wenn die Belegung mittig
+     * erfolgt. Die Nutzung von Gap.sub() ist sinnvoll.
+     *
+     * @param position Position der Belegung
+     * @param length Länge der Belegung
+     * @return die evtl. veränderte Liste
+     */
+    @Override
+    public GapList remove(int position, int length) {
+        Gap newGap = new Gap(position, position + length);
+        return remove(newGap);
+    }
+
+    /**
+     * entfernt eine Lücke aus der Liste. Die Lücke muss nicht mit den gleichen
+     * Grenzen in der Liste stehen! Entfernen einer Lücke ist gleichbedeutend
+     * mit Okkupieren einer Stelle.
+     *
+     * @param gap freizugebendes Lücke
+     * @return die Liste mit freigegebenem Lücke
+     */
+    @Override
+    public GapList remove(Gap gap) {
+        Gap[] arrayGap = this.getPayload().sub(gap);
+
+        if (arrayGap.length == 0) {
+            return this.next;
+        } else if (arrayGap.length == 1 && arrayGap[0] == this.getPayload()) {
+            this.next = this.next.remove(gap);
+            return this;
+        } else if (arrayGap.length == 1 && arrayGap[0] != this.getPayload()) {
+            GapListElement newElement = new GapListElement(arrayGap[0], this.next);
+            return newElement;
+        } else {
+            GapListElement newElement2 = new GapListElement(arrayGap[1], this.next);
+            GapListElement newElement1 = new GapListElement(arrayGap[0], newElement2);
+            return newElement1;
+
+        }
+    }
+
+    /**
+     * fügt die Lücke als neues Listenelement sortiert ein. Überschneidet
+     * (overlaps) oder berührt (touches) die einzufügende Lücke gap eine in der
+     * Liste vorhandene Lücke, so werden diese beiden vereinigt (union) und in
+     * die Liste eingefügt, die vormals vorhandene ausgekettet.
+     *
+     * @param gap Lücke, die als Element einzufügen ist
+     * @return die Liste mit eingefügter Lücke
+     */
+    @Override
+    public GapList insert(Gap gap) {
+        if (this.getPayload().touches(gap) || this.getPayload().overlaps(gap)) {
+            Gap newUnionedGap = this.getPayload().union(gap);
+            this.next = next.insert(newUnionedGap);
+            return this.next;
+        } else if (gap.precedes(this.getPayload())) {
+            return new GapListElement(gap, this);
+        } else {
+            this.next = this.next.insert(gap);
+            return this;
+        }
+
+    }
+
+    /**
+     * fügt die Lücke als neues Listenelement sortiert ein.
+     *
+     * @param position Startposition der Lücke
+     * @param length Länge der Lücke
+     * @return die Liste mit eingefügter Lücke
+     */
+    @Override
+    public GapList insert(int position, int length) {
+        Gap newGap = new Gap(position, position + length);
+        return insert(newGap);
+    }
+
+    /**
+     * überschreibt equals. Vergleicht rekursiv alle Elemente.
+     *
+     * @param obj zu vergleichendes Objekt muss auch ein GapListElement sein
+     * @return true, wenn dies und alle folgenden Elemente gleich sind
+     */
+    @Override
+    public boolean equals(Object obj) {
+        // TODO Überprüfen, ob es so funktinoiert
+        if (obj instanceof GapListElement) {
+
+            GapListElement gapListElementObject = (GapListElement) obj;
+
+            if (this.getPayload().equals(gapListElementObject.getPayload())) {
+                return this.next.equals(gapListElementObject.next);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * liefert eine Auflistung der enthaltenen Lücken
+     *
+     * @return in einem String die Aufzählung aller enthaltenen Elemente
+     */
+    @Override
+    public String toString() {
+        String kommaSetzung = (this.next.isEmpty()) ? "" : ", ";
+        return String.format("%s%s", this.getPayload().toString(), kommaSetzung) + this.next.toString();
+    }
+    //--- Testroutinen ---------------------------------------------------------
+    // testet insert auf
+    // Einfügen unabhängiger Elemente
+    // Einfügen angrenzender Elemente -> müssen vereinigt werden
+    // Einfügen überlappender Elemente -> dürfen nicht eingefügt werden
+
+    private static void testInsert() {
+
+        GapList list = new GapListEmptyElement();
+
+        Gap gap = new Gap(5, 10);
+        list = list.insert(gap);
+        assert 1 == list.length() : "erstes Element wurde nicht zugefügt";
+        assert "  5.. 10".equals(gap.toString()) : "gap.toString() ist fehlerhaft";
+        assert "  5.. 10".equals(list.toString()) : "GapListElement.toString() oder GapList.toString() mit einem Element ist fehlerhaft";
+
+        gap = new Gap(31, 40);
+        list = list.insert(gap);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "unabhängige Lücke wurde nicht angefügt";
+        assert "  5.. 10,  31.. 40".equals(list.toString()) : "GapListElement.toString() oder GapList.toString() mit zwei Elementen ist fehlerhaft";
+
+        // 5..10,  31.. 40
+        gap = new Gap(10, 20);
+        list = list.insert(gap);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "aneinandergrenzende Lücken sollten vereinigt werden";
+        assert "  5.. 20,  31.. 40".equals(list.toString());
+
+        // 5..20,  31.. 40
+        gap = new Gap(0, 5);
+        list = list.insert(gap);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "aneinandergrenzende Lücken sollten vereinigt werden";
+        assert "  0.. 20,  31.. 40".equals(list.toString());
+
+        //  0..20,   31.. 40
+        gap = new Gap(32, 35);
+        list = list.insert(gap);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : gap.toString() + " darf nicht zugefügt werden, ist bereits enthalten";
+        assert "  0.. 20,  31.. 40".equals(list.toString());
+
+        gap = new Gap(21, 29);
+        list = list.insert(gap);
+        // System.out.println(list.toString());
+        assert 3 == list.length() : "unabhängige Lücke wurde nicht angefügt";
+        assert "  0.. 20,  21.. 29,  31.. 40".equals(list.toString()) : "GapListElement.toString() oder GapList.toString() mit drei Elementen ist fehlerhaft";
+
+        gap = new Gap(19, 32);
+        list = list.insert(gap);
+        //System.out.println(list.toString());
+        assert 1 == list.length() : "unabhängige Lücke wurde nicht angefügt";
+        assert "  0.. 40".equals(list.toString()) : "GapListElement.toString() oder GapList.toString() mit drei Elementen ist fehlerhaft";
+
+        System.out.println("Test insert() erfolgreich");
+
+    }
+
+    /**
+     * testet hasJustOneElement() isEmpty() hasGap()
+     */
+    private static void testHasRoutines() {
+
+        GapList list = new GapListEmptyElement();
+
+        assert list.isEmpty();
+        assert !list.hasJustOneElement();
+        assert !list.hasGap(5);
+
+        list = list.insert(new Gap(5, 10));
+
+        assert !list.isEmpty();
+        assert list.hasJustOneElement();
+        assert list.hasGap(1);
+        assert list.hasGap(5);
+        assert !list.hasGap(6);
+
+        list = list.insert(new Gap(15, 55));
+
+        assert !list.isEmpty();
+        assert !list.hasJustOneElement();
+        assert list.hasGap(15);
+        assert list.hasGap(40);
+        assert !list.hasGap(50);
+
+        System.out.println("Test hasRoutines() erfolgreich");
+    }
+
+    /**
+     * testet getLargestGap()
+     */
+    private static void testGetLargestGap() {
+
+        GapList list = new GapListEmptyElement();
+
+        assert 0 == list.getLargestGap();
+
+        list = list.insert(new Gap(10, 15));
+        assert 5 == list.getLargestGap();
+        
+        list = list.insert(new Gap(40, 57));
+        assert 17 == list.getLargestGap();
+
+        list = list.insert(new Gap(0, 8));
+        assert 17 == list.getLargestGap();
+        
+        list = list.insert(new Gap(100, 120));
+        assert 20 == list.getLargestGap();
+
+        System.out.println("Test GetLargestGap() erfolgreich");
+    }
+
+    /**
+     * testet remove() auf Entfernen in der Mitte einer Lücke Entfernen am
+     * Anfang einer Lücke Entfernen am Ende einer Lücke nicht zulässiges
+     * Entfernen
+     */
+    private static void testRemoveGap() {
+        GapList list = new GapListEmptyElement();
+
+        list = list.insert(new Gap(0, 20));
+        list = list.insert(new Gap(31, 40));
+
+        // Verkürzen eines Elements am Anfang, am Ende und mittig
+        list = list.remove(new Gap(15, 20));
+        //System.out.println(list.toString());
+        assert 2 == list.length() : "erste Lücke darf nur verkürzt werden";
+        assert "  0.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(new Gap(0, 5));
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "erste Lücke darf nur verkürzt werden";
+        assert "  5.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(new Gap(10, 12));   // 2 Lücken entstehen statt der ersten
+        //System.out.println(list.toString());
+        assert 3 == list.length() : "erste Lücke müsste aufgeteilt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        // ungültige Entfernversuche
+        //System.out.println(list.toString());
+        list = list.remove(new Gap(10, 20));
+        //System.out.println(list.toString());
+        assert 3 == list.length() : "bereits belegter Platz darf nicht belegt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(new Gap(10, 13));
+        assert 3 == list.length() : "nicht existente Lücke kann nicht entfernt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(new Gap(13, 20));
+        assert 3 == list.length() : "bereits belegter Platz darf nicht belegt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        // Rest mit genauer Angabe komplett entfernen
+        list = list.remove(new Gap(31, 40));
+        assert 2 == list.length() : "Lücke wird komplett belegt";
+        assert "  5.. 10,  12.. 15".equals(list.toString());
+
+        list = list.remove(new Gap(5, 10));
+        list = list.remove(new Gap(12, 15));
+        assert list.isEmpty() : "Liste soll jetzt leer sein";
+
+        System.out.println("Test remove(gap) erfolgreich");
+    }
+
+    /**
+     * testet remove auf Entfernen in der Mitte einer Lücke Entfernen am Anfang
+     * einer Lücke Entfernen am Ende einer Lücke nicht zulässiges Entfernen
+     */
+    private static void testRemovePosLen() {
+        GapList list = new GapListEmptyElement();
+
+        list = list.insert(new Gap(0, 20));
+        list = list.insert(new Gap(31, 40));
+
+        // Verkürzen eines Elements am Anfang, am Ende und mittig
+        list = list.remove(15, 5);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "erste Lücke darf nur verkürzt werden";
+        assert "  0.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(0, 5);
+        // System.out.println(list.toString());
+        assert 2 == list.length() : "erste Lücke darf nur verkürzt werden";
+        assert "  5.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(10, 2);   // 2 Lücken entstehen statt der ersten
+        // System.out.println(list.toString());
+        assert 3 == list.length() : "erste Lücke müsste aufgeteilt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        // ungültige Entfernversuche
+        list = list.remove(10, 10);
+        assert 3 == list.length() : "bereits belegter Platz darf nicht belegt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(10, 3);
+        assert 3 == list.length() : "nicht existente Lücke kann nicht entfernt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        list = list.remove(13, 7);
+        assert 3 == list.length() : "bereits belegter Platz darf nicht belegt werden";
+        assert "  5.. 10,  12.. 15,  31.. 40".equals(list.toString());
+
+        // Rest mit genauer Angabe komplett entfernen
+        list = list.remove(31, 9);
+        assert 2 == list.length() : "Lücke wird komplett belegt";
+        assert "  5.. 10,  12.. 15".equals(list.toString());
+
+        list = list.remove(5, 5);
+        list = list.remove(12, 3);
+        assert list.isEmpty() : "Liste soll jetzt leer sein";
+
+        System.out.println("Test testRemove(pos,len) erfolgreich");
+    }
+
+    /**
+     * testet FindPositionFor den ersten kleinstmöglichen Platz zu finden
+     * ungültige Suchangaben liefern Fehlerwert
+     */
+    private static void testFindPositionFor() {
+        GapList list = new GapListEmptyElement();
+        assert -1 == list.findPositionFor(1);
+
+        list = list.insert(new Gap(0, 10));
+        list = list.insert(new Gap(12, 15));
+        list = list.insert(new Gap(20, 33));
+
+        assert 0 == list.findPositionFor(10);
+        assert 0 == list.findPositionFor(8);
+        assert 12 == list.findPositionFor(3);
+        assert 12 == list.findPositionFor(2);
+        assert 12 == list.findPositionFor(1);
+        assert 12 == list.findPositionFor(0);
+
+        assert 20 == list.findPositionFor(11);
+
+        assert -1 == list.findPositionFor(15);
+        assert -1 == list.findPositionFor(14);
+
+        System.out.println("Test findPositionFor() erfolgreich");
+    }
+
+    /**
+     * Tests der geschriebenen Methoden per Assertions
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        testInsert();
+        testHasRoutines();
+        testGetLargestGap();
+        testRemoveGap();
+        testRemovePosLen();
+        testFindPositionFor();
+
+    }
+
+}
