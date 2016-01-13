@@ -265,10 +265,7 @@ public class ArrayRow extends Row {
 
         for (int i = 0; i < this.getArray().length; i++) {
 
-            if (this.getArray()[i].contains(gap)) {
-                System.arraycopy(getArray(), 0, newArr, 0, getArray().length);
-                return newArr;
-            } else if (this.getArray()[i].touches(gap) || this.getArray()[i].overlaps(gap)) {
+            if (this.getArray()[i].touches(gap) || this.getArray()[i].overlaps(gap)) {
                 Gap newUnionedGap = this.getArray()[i].union(gap);
                 newArr = new Gap[this.getArray().length];
                 System.arraycopy(this.getArray(), 0, newArr, 0, this.getArray().length);
