@@ -10,10 +10,11 @@ package grp28_ueb08;
  * @author thomasd
  */
 public class CalculatorWork {
-    Double op1;
-    Double op2;
-    Double memOp1 = 0.0;
-    String operator;
+    private Double op1;
+    private Double op2;
+    private Double memOp1 = 0.0; //nuull setzen
+    private String operator;
+    private String lastInput;
     
     //TODO memory function 
     
@@ -51,6 +52,19 @@ public class CalculatorWork {
         this.operator = operator;
     }
     
+    public String getLastInput() {
+        return lastInput;
+    }
+    
+    public void setLastInput(String lastInput) {
+        this.lastInput = lastInput;
+    }
+    
+    public boolean anyOperator(){
+        return "+".equals(getLastInput()) || "-".equals(getLastInput()) 
+                || "*".equals(getLastInput()) || "/".equals(getLastInput());
+    }
+    
     public double calculate() {
         double result = 0;
         
@@ -74,7 +88,7 @@ public class CalculatorWork {
                 }
         }
         setOp1(result);
-        //setOperator("=");
+        setOperator("=");
         return result;
     }
     public void calcMemory (Double value) {
@@ -91,6 +105,11 @@ public class CalculatorWork {
                 break;
         }
         
+    }
+    public void clearMemory() {
+        setOp1(null);
+        setOp2(null);
+        setOperator(null);
     }
     
 }
