@@ -1,0 +1,169 @@
+package viergewinnt;
+
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+
+/**
+ * Diese Klasse bildet den Controller für das FXMLDocument. Sie verwaltet den
+ * gesamten Spielzustand.
+ *
+ * @author Jan Riemer
+ */
+public class FXMLDocumentController implements Initializable, ClickHandler {
+
+    /**
+     * GridPain, welches als Spielfeld fungiert.
+     */
+    @FXML
+    private GridPane grdPnMain;
+
+    /**
+     * Label, welches anzeigt, welcher Spieler gerade am Zug ist.
+     */
+    @FXML
+    private Label lblCurrentPlayer;
+
+    /**
+     * Pane, welches den Stein anzeigt, den der derzeitige Spieler in einen Slot
+     * werfen kann.
+     */
+    @FXML
+    private Pane pnCurrentStone;
+
+    /**
+     * Verwaltet die Spiellogik.
+     */
+    private GameLogic gameLogic;
+
+    /**
+     * Verwaltet das Spielfeld.
+     */
+    private GameFieldManager gameFieldManager;
+
+    /**
+     * Initialisiert ein Vier-Gewinnt Spiel.
+     *
+     * @param url nicht benutzt
+     * @param rb nicht benutzt
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        this.gameFieldManager = new GameFieldManager(this.grdPnMain);
+        CellManager cellManager = this.gameFieldManager.getCellManager();
+        cellManager.setOnMouseClickedForCells(this);
+
+        this.gameLogic = new GameLogic(cellManager);
+        this.updateLblCurrentPlayer();
+        this.updatePnCurrentStone();
+    }
+
+    @Override
+    public void handle(MouseEvent event) {
+        this.handleClickOnCell(event);
+    }
+
+    /**
+     * Wird aufgerufen, wenn auf eine Zelle innerhalb des Spielfeldes geklickt
+     * wird.
+     *
+     * @param event Das Mouse-Event mit dem angeklickten Pane-Objekt, welches
+     * sich innerhalb einer Zelle befindet.
+     */
+    private void handleClickOnCell(MouseEvent event) {
+
+        gameFieldManager.dropStoneIntoSlot((Pane) event.getSource(), gameLogic);
+        if (gameLogic.hasCurrentPlayerWon()){
+            this.showInfoDialog();
+            this.finishGame();
+        } else {
+            gameLogic.nextPlayer();
+            this.updateLblCurrentPlayer();
+            this.updatePnCurrentStone();
+        }
+    }
+
+    /**
+     * Aktualisiert die Anzeige des verfügbaren Steines des aktuellen Spielers.
+     */
+    private void updatePnCurrentStone() {
+        this.pnCurrentStone.setBackground(
+                new Background(
+                        new BackgroundFill(
+                                this.gameLogic.getColorOfCurrentPlayer(),
+                                CornerRadii.EMPTY,
+                                Insets.EMPTY)
+                )
+        );
+    }
+
+    /**
+     * Aktualisiert das Label zur Anzeige des Spielers, der zurzeit am Zug ist.
+     */
+    private void updateLblCurrentPlayer() {
+        this.lblCurrentPlayer
+                .setText(
+                        "Spieler "
+                        + String.valueOf(this.gameLogic.getCurrentPlayer() + 1)
+                );
+    }
+
+    /**
+     * Zeigt einen Info-Dialog über den Ausgang des Spiels an.
+     */
+    private void showInfoDialog() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Spiel beendet");
+        alert.setHeaderText(this.createTextBasedOnGameResult());
+
+        Optional<ButtonType> result = alert.showAndWait();
+    }
+
+    /**
+     * Erstellt einen beschreibenden Text, basierend auf dem Ausgang des Spiels.
+     *
+     * @return Der beschreibende Text, basierend auf dem Ausgang des Spiels.
+     */
+    private String createTextBasedOnGameResult() {
+        String res = null;
+
+        if (this.gameLogic.hasCurrentPlayerWon()) {
+            res = lblCurrentPlayer.getText() + " hat gewonnen."
+                    + System.lineSeparator()
+                    + "Herzlichen Glückwunsch!";
+        } else if (this.gameLogic.areAllSlotsReserved()) {
+            res = "Unentschieden! Ihr seid beide wirklich gut!";
+        }
+        assert (res != null);
+        return res;
+    }
+
+    /**
+     * Beendet das Spiel, indem alle Benutzerinteraktionen bzgl. des Spiels
+     * entfernt werden.
+     */
+    private void finishGame() {
+        this.gameFieldManager = new GameFieldManager(this.grdPnMain);
+        CellManager cellManager = this.gameFieldManager.getCellManager();
+        
+        
+        
+        cellManager.setOnMouseClickedForCells(this);
+
+        this.gameLogic = new GameLogic(cellManager);
+        
+    }
+
+}

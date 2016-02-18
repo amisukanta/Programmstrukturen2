@@ -1,0 +1,164 @@
+package viergewinnt;
+
+/**
+ * Repräsentiert Zell-Koordinaten. Zell-Koordinaten bestehen aus einer
+ * vertikalen und einer horizontalen Koordinate.
+ *
+ * @author Jan Riemer
+ */
+public class CellCoordinates {
+
+    /**
+     * Repräsentiert Richtungen, in die auf einem Koordinatensystem gegangen
+     * werden kann. Die verschiedenen Richtungen müssen im Uhrzeigersinn
+     * definiert werden und die Enum-Werte müssen ihren Standard-Ordinalwert
+     * beibehalten, da andere Module von dieser Ordnung und den Ordinalwerten
+     * abhängen. Außerdem muss es zu einer Richtung immer eine entgegengesetzte
+     * Richtung geben.
+     */
+    public enum Direction {
+
+        UP,
+        UP_RIGHT,
+        RIGHT,
+        DOWN_RIGHT,
+        DOWN,
+        DOWN_LEFT,
+        LEFT,
+        UP_LEFT
+    }
+
+    /**
+     * Die vertikale Koordinate dieser Zell-Koordinaten.
+     */
+    private final int columnIdx;
+
+    /**
+     * Die horizontale Koordinate dieser Zell-Koordinaten.
+     */
+    private final int rowIdx;
+
+    /**
+     * Initialisiert Zell-Koordinaten. Zell-Koordinaten bestehen aus einer
+     * vertikalen und einer horizontalen Koordinate.
+     *
+     * @param colIdx Die vertikale Koordinate.
+     * @param rowIdx Die horizontale Koordinate.
+     */
+    public CellCoordinates(int colIdx, int rowIdx) {
+        this.columnIdx = colIdx;
+        this.rowIdx = rowIdx;
+    }
+
+    /**
+     * Gibt die vertikale Koordinate dieser Zell-Koordinaten zurück.
+     *
+     * @return Die vertikale Koordinate dieser Zell-Koordinaten.
+     */
+    public int getColumnIdx() {
+        return this.columnIdx;
+    }
+
+    /**
+     * Gibt die horizontale Koordinate dieser Zell-Koordinaten zurück.
+     *
+     * @return Die horizontale Koordinate dieser Zell-Koordinaten.
+     */
+    public int getRowIdx() {
+        return this.rowIdx;
+    }
+
+    /**
+     * Darstellung dieser Zell-Koordinaten als Zeichenkette.
+     *
+     * @return Die Darstellung dieser Zell-Koordinaten als Zeichenkette.
+     */
+    @Override
+    public String toString() {
+        return "[" + this.columnIdx + ", " + this.rowIdx + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CellCoordinates other = (CellCoordinates) obj;
+        return this.columnIdx == other.columnIdx
+                && this.rowIdx == other.rowIdx;
+    }
+
+    /**
+     * Gibt die entgegengesetze Richtung einer bestimmten Richtung zurück.
+     *
+     * @param dir Die Richtung, dessen entgegengesetzte Richtung zurückgegeben
+     * werden soll.
+     * @return Die entgegengesetzte Richtung von dir.
+     */
+    public static Direction getOppositeDirOf(Direction dir) {
+
+        int ordinalOfDir = dir.ordinal();
+
+        if (ordinalOfDir < 4) {
+            return Direction.values()[ordinalOfDir + 4];
+        } else {
+            return Direction.values()[ordinalOfDir - 4];
+        }
+
+    }
+
+    /**
+     * Gibt die Zell-Koordinaten zurück, die von einem Ursprung aus eine
+     * bestimmte Anzahl an Schritten in eine Richtung entfernt liegen.
+     *
+     * @param dir Die Richtung, in die gegangen werden soll.
+     * @param from Der Ursprung von dem aus gegangen werden soll.
+     * @param steps Die Anzahl an Schritten in die gegebene Richtung.
+     * @return Die Zell-Koordinaten, die von einem Ursprung aus eine bestimmte
+     * Anzahl an Schritten in eine Richtung entfernt liegen.
+     */
+    public static CellCoordinates getCoordsAtDir(
+            Direction dir,
+            CellCoordinates from,
+            int steps) {
+        assert (from != null);
+        CellCoordinates newCellCoordinates;
+
+        switch (dir.name()) {
+            case "UP":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx(), from.rowIdx + steps);
+                break;
+            case "UP_RIGHT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() + steps, from.rowIdx + steps);
+                break;
+            case "RIGHT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() + steps, from.rowIdx);
+                break;
+            case "DOWN_RIGHT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() + steps, from.rowIdx - steps);
+                break;
+            case "DOWN":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx(), from.rowIdx - steps);
+                break;
+            case "DOWN_LEFT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() - steps, from.rowIdx - steps);
+                break;
+            case "LEFT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() - steps, from.rowIdx);
+                break;
+            case "UP_LEFT":
+                newCellCoordinates = new CellCoordinates(from.getColumnIdx() - steps, from.rowIdx + steps);
+                break;
+            default:
+                newCellCoordinates = new CellCoordinates(-1, -1);
+                break;
+        }
+        
+        return newCellCoordinates;
+
+    }
+
+}
