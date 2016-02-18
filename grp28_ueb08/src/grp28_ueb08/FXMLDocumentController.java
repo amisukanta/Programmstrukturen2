@@ -22,72 +22,36 @@ public class FXMLDocumentController implements Initializable {
     
     CalculatorWork calculator = new CalculatorWork();
     @FXML
-    private Button btn1;
-    @FXML
-    private Button btn2;
-    @FXML
-    private Button btn3;
-    @FXML
-    private Button btnSub;
-    @FXML
-    private Button btn0;
-    @FXML
-    private Button btnPoint;
-    @FXML
-    private Button btnCalc;
-    @FXML
-    private Button btnAdd;
-    @FXML
     private TextField txtFldDisplay;
     @FXML
-    private Button btn4;
-    @FXML
-    private Button btn5;
-    @FXML
-    private Button btn6;
-    @FXML
-    private Button btn7;
-    @FXML
-    private Button btn8;
-    @FXML
-    private Button btn9;
-    @FXML
-    private Button btnMC;
-    @FXML
-    private Button btnMR;
-    @FXML
-    private Button btnMadd;
-    @FXML
     private Button btnC;
-    @FXML
-    private Button btnMsub;
-    @FXML
-    private Button btnAC;
-    @FXML
-    private Button btnSub1;
-    @FXML
-    private Button btnSub2;
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //TODO
     }    
 
     @FXML
     private void handleBtnDigit(ActionEvent event) {
-        if("=".equals(calculator.getOperator())){
+        
+        if("=".equals(calculator.getOperator()) || "MR".equals(calculator.getLastInput())){
             btnC.fire();
             txtFldDisplay.setText(((Button)(event.getSource())).getText());
+        }else if(calculator.anyOperator() == true){
+            txtFldDisplay.setText("");
+            String oldText = txtFldDisplay.getText();
+            txtFldDisplay.setText(oldText + ((Button)(event.getSource())).getText());
         }else {
             String oldText = txtFldDisplay.getText();
             txtFldDisplay.setText(oldText + ((Button)(event.getSource())).getText());
         }
-        
+        calculator.setLastInput(((Button)(event.getSource())).getText());
     }
 
     @FXML
     private void handleBtnPoint(ActionEvent event) {
+        calculator.setLastInput(((Button)(event.getSource())).getText());
         String oldText = txtFldDisplay.getText();
         if(!oldText.contains(".")){
             txtFldDisplay.setText(oldText + ".");
@@ -98,6 +62,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleBtnCalc(ActionEvent event) {
         //TODO make calculations, set back or make operations, adjust display, exceptions
+        calculator.setLastInput(((Button)(event.getSource())).getText());
         double value = 0;
         
         if("".equals(txtFldDisplay.getText())){
@@ -116,62 +81,102 @@ public class FXMLDocumentController implements Initializable {
         }
               
         txtFldDisplay.setText(String.valueOf(calculator.calculate()));
-        calculator.setOperator("=");
+        
     }
 
     @FXML
     private void handleBtnOpr(ActionEvent event) {
-        //TODO exceptions if txtFldDisplay is empty or wrong format?
-        double value;
-        if("=".equals(calculator.getOperator()) || calculator.getOp1() == null){
-            value = Double.valueOf(txtFldDisplay.getText());
-            calculator.setOp1(value);
+
+        calculator.setLastInput(((Button)(event.getSource())).getText());
+        try {  
+            double value;
+            if("=".equals(calculator.getOperator()) || calculator.getOp1() == null){
+                value = Double.valueOf(txtFldDisplay.getText());
+                calculator.setOp1(value);
+                calculator.setOperator(((Button)(event.getSource())).getText());
+                //txtFldDisplay.setText("");            
+            }else if (calculator.getLastInput() != calculator.getOperator()){
+                calculator.setOp2(Double.valueOf(txtFldDisplay.getText()));
+                calculator.calculate();
+                calculator.setOperator(((Button)(event.getSource())).getText());
+                //txtFldDisplay.setText("");   
+            }
+        }
+        catch (NumberFormatException e) { // java.lang.reflect.InvocationTargetException) {
+            System.err.println("Input error!"); 
+            System.err.println("Repeatedly pressed: '" + ((Button)(event.getSource())).getText() + "'");
             calculator.setOperator(((Button)(event.getSource())).getText());
-            txtFldDisplay.setText("");            
-        }else{
-            calculator.setOp2(Double.valueOf(txtFldDisplay.getText()));
-            calculator.calculate();
-            txtFldDisplay.setText("");   
         }
         
     }
 
     @FXML
     private void handleBtnClear(ActionEvent event) {
+        calculator.setLastInput(((Button)(event.getSource())).getText());
         if( "AC".equals(((Button)(event.getSource())).getText())){
-            calculator.setOp1(null);
-            calculator.setOp2(null);
-            calculator.setOperator(null);
-            txtFldDisplay.setText("");
+            calculator.clearMemory();          
         }else if(calculator.getOp1() != null && !"".equals(txtFldDisplay.getText())){
             calculator.setOp2(null);
-            txtFldDisplay.setText(""); 
         }else{
             calculator.setOp1(null);
-            txtFldDisplay.setText("");
         }
+        txtFldDisplay.setText("");
     }
 
     @FXML
     private void handleBtnMemory(ActionEvent event) {
-        
+
+        calculator.setLastInput(((Button)(event.getSource())).getText());
+        calculator.setOperator(((Button)(event.getSource())).getText());
         double value;
         if(!"".equals(txtFldDisplay.getText())){
             value = Double.valueOf(txtFldDisplay.getText()); 
         }else
-            value = 0.0;
+            value = 0.0;  
+        
+        if("MC".equals(calculator.getLastInput())) {
+            calculator.calcMemory(value);
+            txtFldDisplay.setText("");
+        }else if("MR".equals(calculator.getLastInput())){
+            calculator.calcMemory(value);
+            txtFldDisplay.setText(String.valueOf(calculator.getMemop1()));
+        }else {
+            calculator.calcMemory(value);
+        }
+
+        
+        
+        
+        /*
+        //MR dann andere Zahl...Operation starten
+        double value;
+        if(!"".equals(txtFldDisplay.getText())){
+            value = Double.valueOf(txtFldDisplay.getText()); 
+        }else
+            value = 0.0;     
+        
+        if("MR".equals(((Button)(event.getSource())).getText()) || "MC".equals(calculator.getLastInput())){
+           if(calculator.getMemop1() == 0.0 || "MC".equals(calculator.getLastInput())){
+               txtFldDisplay.setText("");
                
+            }else {
+                txtFldDisplay.setText(String.valueOf(calculator.getMemop1()));
+            } 
+        }else {
+            calculator.setOperator(((Button)(event.getSource())).getText());
+            calculator.calcMemory(value);
+        }
         
         if(!"MR".equals(((Button)(event.getSource())).getText())) {
             calculator.setOperator(((Button)(event.getSource())).getText());
             calculator.calcMemory(value);
         }else{
             if(calculator.getMemop1() == 0.0){
-               txtFldDisplay.setText("0.0"); 
+               txtFldDisplay.setText(""); 
             }else {
                 txtFldDisplay.setText(String.valueOf(calculator.getMemop1()));
             }
-        }
+        }*/
     }
     
     
